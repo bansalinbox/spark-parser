@@ -7,7 +7,7 @@ object LoggerSparkParser {
   def main(args: Array[String]): Unit = {
     //fileReader()
     val ss = fileReaderAsRDD()
-     ss.foreach { x => println(x) }
+  //    ss.foreach { x => println(x) }
     //  println(ss.for)
   }
 
@@ -41,38 +41,60 @@ object LoggerSparkParser {
     // println("final output is -->" + outputFinalText.show())
   }
 
-  def fileReaderAsRDD(): Array[String] = {
+  def fileReaderAsRDD(): Array[StringBuilder] = {
     val session = spark.connection.local.SparkContext.sessionSpark()
     val sc = session.sparkContext
-    
+
     // Read as dataFrame
     val inputFilePath = sc.textFile("/Users/gxb8991/Documents/eclipse-workspace/sp-cass/src/main/resources/spark/scala/LogParser/test.txt")
+
+    var outputText = new StringBuilder("")
     
-    var outputText = new StringBuilder
-    val tt = inputFilePath.map(x => x.split('|')).map { y =>
+    
+//    val tt = inputFilePath.map(x => x.split('|')).map { y =>
+//      if ("gourav" == y(0)) {
+//        var outputFinalText = new StringBuilder("")
+//
+//        outputFinalText.append(outputText.slice(0, outputText.length() - 1))
+//        outputText.clear()
+//        outputText ++= y(1) + ","
+//       
+//       outputFinalText
+//      } else {
+//        var pp = new StringBuilder("")
+//       
+//        outputText ++= y(1) + ","
+//        
+//        pp.append(outputText)
+//        println(pp)
+//        null
+//      }
+//
+//    }
+        val tt = inputFilePath.map(x => x.split('|')).map { y =>
       if ("gourav" == y(0)) {
-        var outputFinalText = outputText.slice(0, outputText.length() - 1) + "\n"
+        var outputFinalText = new StringBuilder("")
+
+        outputFinalText.append(outputText.slice(0, outputText.length() - 1))
         outputText.clear()
         outputText ++= y(1) + ","
-
-        outputFinalText
-        
+       
+       outputFinalText
       } else {
-
+        var pp = new StringBuilder("")
+       
         outputText ++= y(1) + ","
-
+        
+        pp.append(outputText)
+        println(pp)
         null
       }
 
     }
-      .filter { x => x != null && x.size > 0}
-      .collect()
+    .filter { z => z != null }.collect()
 
-//    tt.foreach { x => println(x) }
-////    
-////    tt.collect()
-
-      tt
+      
+    tt
   }
 
 }
